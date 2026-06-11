@@ -2,6 +2,13 @@
   "version": 2,
   "builds": [
     {
+      "src": "build_files.sh",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "pulsex/staticfiles"
+      }
+    },
+    {
       "src": "pulsex/pulsex/wsgi.py",
       "use": "@vercel/python",
       "config": {
@@ -13,7 +20,7 @@
   "routes": [
     {
       "src": "/static/(.*)",
-      "dest": "pulsex/static/$1"
+      "dest": "pulsex/staticfiles/$1"
     },
     {
       "src": "/(.*)",
