@@ -1,6 +1,13 @@
 import os
+import sys
 import shutil
 from pathlib import Path
+
+# Add python path for Vercel module resolution
+base_dir = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(base_dir))
+sys.path.insert(0, str(base_dir.parent))
+
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pulsex.settings')
