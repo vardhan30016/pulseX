@@ -1,0 +1,15 @@
+{
+  "venvPath": ".",
+  "venv": ".venv",
+  "extraPaths": [
+    "./pulsex"
+  ],
+  "executionEnvironments": [
+    {
+      "root": "./pulsex",
+      "extraPaths": [
+        "."
+      ]
+    }
+  ]
+}

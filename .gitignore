@@ -1,0 +1,30 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Environments
+.venv/
+venv/
+ENV/
+
+# Databases
+db.sqlite3
+
+# User uploaded media
+pulsex/media/
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Archives
+*.zip
+*.tar.gz

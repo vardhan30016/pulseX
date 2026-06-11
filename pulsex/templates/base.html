@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PulseX{% endblock %}</title>
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Local Bootstrap 5 CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #FF4B2B 0%, #FF416C 100%);
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #FF416C;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+        }
+
+        .navbar-brand {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .btn-gradient {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 75, 43, 0.3);
+            color: white;
+        }
+
+        .footer {
+            margin-top: auto;
+            background-color: #0f172a;
+            color: #94a3b8;
+            padding: 2rem 0;
+            font-size: 0.9rem;
+        }
+
+        /* Micro-interactions */
+        .nav-link {
+            position: relative;
+            font-weight: 500;
+            color: #475569 !important;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: var(--primary-gradient);
+            transition: width 0.25s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link:hover {
+            color: #0f172a !important;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Premium Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
+                <img src="{% static 'images/pulsex_logo.png' %}" alt="PulseX" style="height: 36px; width: auto;">
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item px-2">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item px-2">
+                        <a class="nav-link" href="{% url 'diseases' %}">Diseases</a>
+                    </li>
+                    <li class="nav-item px-2">
+                        <a class="nav-link" href="{% url 'quiz' %}">Quiz</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item px-2">
+                            <a class="nav-link" href="{% url 'dashboard' %}">Profile</a>
+                        </li>
+                        <li class="nav-item ms-3">
+                            <a class="btn btn-gradient px-4 py-2 rounded-pill" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item px-2">
+                            <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        </li>
+                        <li class="nav-item ms-3">
+                            <a class="btn btn-gradient px-4 py-2 rounded-pill" href="{% url 'login' %}">Login</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="py-5">
+        <div class="container">
+            {% block content %}
+            <div class="row justify-content-center text-center py-5">
+                <div class="col-md-8">
+                    <h1 class="display-4 mb-3" style="letter-spacing: -1px;">Welcome to PulseX</h1>
+                    <p class="lead text-muted mb-4">Empowering heart health education and circulatory system awareness.</p>
+                    <a href="#" class="btn btn-gradient btn-lg px-5 py-3 rounded-pill shadow">Get Started</a>
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- Premium Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <p class="mb-1">&copy; 2026 PulseX. All rights reserved.</p>
+            <p class="mb-0 text-muted-opacity">Heart Sync Connectors | Connecting Knowledge with the Rhythm of Life.</p>
+        </div>
+    </footer>
+
+    <!-- Local Bootstrap 5 JS Bundle -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

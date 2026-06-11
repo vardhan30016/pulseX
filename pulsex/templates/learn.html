@@ -1,0 +1,306 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Learn Circulatory System | PulseX{% endblock %}
+
+{% block extra_css %}
+<!-- Google Fonts: Orbitron for headings, Inter for body -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* Dark Navy Theme Overrides */
+    body {
+        background-color: #0A0F1E !important;
+        color: #f8fafc !important;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 0.5px;
+    }
+    
+    .heart-pulse-group {
+        transform-origin: 50px 55px;
+        animation: heartDoubleBeat 1.4s infinite ease-in-out;
+    }
+    @keyframes heartDoubleBeat {
+        0%, 100% {
+            transform: scale(1);
+        }
+        15% {
+            transform: scale(1.12);
+        }
+        30% {
+            transform: scale(1.02);
+        }
+        45% {
+            transform: scale(1.16);
+        }
+        70% {
+            transform: scale(1);
+        }
+    }
+    .pacemaker-glow {
+        animation: pulsePacemaker 1.4s infinite ease-in-out;
+    }
+    @keyframes pulsePacemaker {
+        0%, 100%, 70% {
+            opacity: 0.3;
+            r: 2px;
+        }
+        15%, 45% {
+            opacity: 1;
+            r: 4px;
+        }
+    }
+
+    /* Navbar overrides */
+    .navbar {
+        background-color: #121A30 !important;
+        border-bottom: 1px solid #1E2B4A !important;
+    }
+    .navbar-brand {
+        background: linear-gradient(135deg, #FF6B6B 0%, #E63946 100%) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+    }
+    .nav-link {
+        color: #94a3b8 !important;
+    }
+    .nav-link:hover {
+        color: #FF6B6B !important;
+    }
+
+    /* Header styling */
+    .page-header {
+        padding: 3rem 0;
+        text-align: center;
+    }
+    
+    .page-title {
+        font-size: 2.75rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #FF6B6B 0%, #3A86FF 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.75rem;
+    }
+    
+    .page-subtitle {
+        color: #94a3b8;
+        font-size: 1.15rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* Content Cards */
+    .learn-card {
+        background-color: #121A30;
+        border: 1px solid #1E2B4A;
+        border-radius: 16px;
+        padding: 2.25rem;
+        margin-bottom: 2rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .learn-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(58, 134, 255, 0.15);
+        border-color: #3A86FF;
+    }
+
+    .learn-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, #E63946, #3A86FF);
+    }
+    
+    .card-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+    }
+    
+    .card-icon {
+        width: 50px;
+        height: 50px;
+        background-color: rgba(58, 134, 255, 0.1);
+        border: 1px solid rgba(58, 134, 255, 0.2);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+    
+    .card-badge {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #3A86FF;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    
+    .card-heading {
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .card-text {
+        color: #cbd5e1;
+        line-height: 1.65;
+        font-size: 1.05rem;
+    }
+    
+    .back-btn-container {
+        margin-top: 2rem;
+    }
+    
+    .btn-outline-custom {
+        border: 1.5px solid #1E2B4A;
+        color: #94a3b8;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-outline-custom:hover {
+        border-color: #3A86FF;
+        color: #ffffff;
+        background-color: rgba(58, 134, 255, 0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-header">
+            <div class="text-center mb-3">
+                <svg class="beating-heart-svg" width="100" height="100" viewBox="0 0 100 100" style="filter: drop-shadow(0 0 12px rgba(230, 57, 70, 0.45)); display: inline-block;">
+                    <defs>
+                        <linearGradient id="heart-grad-left" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#FF6B6B" />
+                            <stop offset="100%" stop-color="#E63946" />
+                        </linearGradient>
+                        <linearGradient id="heart-grad-right" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#FF8E8E" />
+                            <stop offset="100%" stop-color="#FF4B2B" />
+                        </linearGradient>
+                        <linearGradient id="blue-vessels" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#4FC3F7" />
+                            <stop offset="100%" stop-color="#0288D1" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Vena Cava & Aorta Backings -->
+                    <path d="M40 15 L40 30" stroke="url(#blue-vessels)" stroke-width="8" stroke-linecap="round" />
+                    <path d="M50 10 C50 25, 62 25, 62 40" stroke="#E63946" stroke-width="8" fill="none" stroke-linecap="round" />
+                    <path d="M58 8 C58 20, 68 20, 68 35" stroke="#E63946" stroke-width="6" fill="none" stroke-linecap="round" />
+                    
+                    <!-- Anatomical Heart Chambers -->
+                    <g class="heart-pulse-group">
+                        <path d="M50 82 C25 65, 15 45, 25 35 C32 28, 43 32, 50 42 Z" fill="url(#heart-grad-left)" />
+                        <path d="M50 82 C75 65, 85 45, 75 35 C68 28, 57 32, 50 42 Z" fill="url(#heart-grad-right)" />
+                        <!-- Pacemaker node -->
+                        <circle cx="50" cy="50" r="3" fill="#ffffff" class="pacemaker-glow" />
+                    </g>
+                </svg>
+            </div>
+            <h1 class="page-title">Circulatory Lessons</h1>
+            <p class="page-subtitle">Master the fundamental principles governing cardiovascular anatomy and biology.</p>
+        </div>
+    </div>
+</div>
+
+<!-- 5 Learning Cards Container -->
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        
+        <!-- Card 1: Introduction -->
+        <div class="learn-card">
+            <div class="card-meta">
+                <div class="card-icon">🌐</div>
+                <span class="card-badge">Section 1</span>
+            </div>
+            <h2 class="card-heading">Introduction to the Circulatory System</h2>
+            <p class="card-text">
+                The circulatory system, also known as the cardiovascular system, is a vast network of organs and blood vessels that acts as the primary transport system of the human body. It is responsible for delivering vital oxygen, hormones, and nutrients to cells, and collecting carbon dioxide and metabolic waste products for elimination. Without the continuous operation of this system, body cells would quickly deteriorate due to starvation and toxic waste build-up.
+            </p>
+            <img src="{% static 'images/heart/circulatory_system.png' %}" alt="Circulatory System" class="learn-img">
+        </div>
+
+        <!-- Card 2: Heart Anatomy -->
+        <div class="learn-card">
+            <div class="card-meta">
+                <div class="card-icon">🫀</div>
+                <span class="card-badge">Section 2</span>
+            </div>
+            <h2 class="card-heading">Heart Anatomy & Physiology</h2>
+            <p class="card-text">
+                The heart is a muscular organ containing four chambers: two upper atria (receiving chambers) and two lower ventricles (pumping chambers). Blood flow direction is strictly controlled by four specialized one-way valves (tricuspid, pulmonary, mitral, aortic), preventing backflow during contraction. The right side pumps oxygen-poor blood to the lungs (pulmonary circuit), while the left side distributes oxygen-rich blood to the rest of the body (systemic circuit).
+            </p>
+            <img src="{% static 'images/heart/heart_anatomy.png' %}" alt="Heart Anatomy" class="learn-img">
+        </div>
+
+        <!-- Card 3: Blood Vessels -->
+        <div class="learn-card">
+            <div class="card-meta">
+                <div class="card-icon">🛣️</div>
+                <span class="card-badge">Section 3</span>
+            </div>
+            <h2 class="card-heading">The Vascular System: Blood Vessels</h2>
+            <p class="card-text">
+                Blood flows through three primary vascular networks: <strong>Arteries</strong> carry oxygenated blood away from the heart at high pressures, featuring thick muscular walls; <strong>Veins</strong> return deoxygenated blood back to the heart at low pressures using skeletal muscle pumps and one-way valves to combat gravity; and microscopic <strong>Capillaries</strong> act as exchange junctions, enabling nutrients and gases to diffuse directly between blood and surrounding tissues.
+            </p>
+            <img src="{% static 'images/heart/blood_vessels.png' %}" alt="Blood Vessels" class="learn-img">
+        </div>
+
+        <!-- Card 4: Blood Components -->
+        <div class="learn-card">
+            <div class="card-meta">
+                <div class="card-icon">🩸</div>
+                <span class="card-badge">Section 4</span>
+            </div>
+            <h2 class="card-heading">Blood Components & Composition</h2>
+            <p class="card-text">
+                Blood is a specialized liquid tissue comprised of four main elements: <strong>Red Blood Cells (RBCs)</strong> containing hemoglobin for oxygen transport; <strong>White Blood Cells (WBCs)</strong> acting as the immune system's defensive shields; <strong>Platelets</strong> which trigger coagulation to seal vascular ruptures; and <strong>Plasma</strong>, a straw-colored liquid consisting of 90% water alongside dissolved hormones, clotting factors, nutrients, and carbon dioxide.
+            </p>
+        </div>
+
+        <!-- Card 5: Interesting Facts -->
+        <div class="learn-card">
+            <div class="card-meta">
+                <div class="card-icon">💡</div>
+                <span class="card-badge">Section 5</span>
+            </div>
+            <h2 class="card-heading">Interesting Facts about Circulation</h2>
+            <p class="card-text">
+                Did you know that the human heart beats about 100,000 times a day, pumping around 2,000 gallons of blood through your body? Furthermore, if all the blood vessels in an adult human body were laid out end-to-end, they would stretch for over 60,000 miles—enough to circle the Earth more than twice! Remarkably, the heart can continue beating even when separated from the body, as long as it has an adequate oxygen supply, due to its intrinsic electrical pacemaker.
+            </p>
+        </div>
+        
+        <!-- Back to Dashboard -->
+        <div class="text-center back-btn-container mb-5">
+            <a href="{% url 'home' %}" class="btn btn-outline-custom shadow-sm">&larr; Back to Dashboard</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

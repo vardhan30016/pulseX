@@ -1,0 +1,442 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Circulatory Simulation | PulseX{% endblock %}
+
+{% block extra_css %}
+<!-- Google Fonts: Orbitron for headings, Inter for body -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* Dark Navy Theme Overrides */
+    body {
+        background-color: #0A0F1E !important;
+        color: #f8fafc !important;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .text-muted {
+        color: #94a3b8 !important;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 0.5px;
+    }
+
+    /* Navbar overrides */
+    .navbar {
+        background-color: #121A30 !important;
+        border-bottom: 1px solid #1E2B4A !important;
+    }
+    .navbar-brand {
+        background: linear-gradient(135deg, #FF6B6B 0%, #E63946 100%) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+    }
+    .nav-link {
+        color: #94a3b8 !important;
+    }
+    .nav-link:hover {
+        color: #FF6B6B !important;
+    }
+
+    /* Header styling */
+    .page-header {
+        padding: 3rem 0;
+        text-align: center;
+    }
+    
+    .page-title {
+        font-size: 2.75rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #FF6B6B 0%, #3A86FF 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.75rem;
+    }
+    
+    .page-subtitle {
+        color: #94a3b8;
+        font-size: 1.15rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* Simulation Control Center */
+    .sim-card {
+        background-color: #121A30;
+        border: 1px solid #1E2B4A;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .control-btn {
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+    
+    .btn-start {
+        background: linear-gradient(135deg, #FF6B6B 0%, #E63946 100%);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+    }
+    .btn-start:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(230, 57, 70, 0.5);
+        color: white;
+    }
+    
+    .btn-pause {
+        background-color: #1e293b;
+        color: #f8fafc;
+        border: 1px solid #475569;
+    }
+    .btn-pause:hover {
+        transform: translateY(-2px);
+        background-color: #334155;
+        color: white;
+    }
+    
+    .btn-reset {
+        background-color: rgba(58, 134, 255, 0.1);
+        color: #3A86FF;
+        border: 1px solid #3A86FF;
+    }
+    .btn-reset:hover {
+        transform: translateY(-2px);
+        background-color: rgba(58, 134, 255, 0.2);
+        color: white;
+    }
+    
+    .status-badge {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+    }
+    
+    .badge-running {
+        background-color: rgba(230, 57, 70, 0.1);
+        color: #E63946;
+        border: 1px solid #E63946;
+    }
+    
+    .badge-paused {
+        background-color: rgba(148, 163, 184, 0.1);
+        color: #94a3b8;
+        border: 1px solid #94a3b8;
+    }
+
+    /* SVG Design */
+    .svg-wrapper {
+        position: relative;
+        text-align: center;
+    }
+
+    .svg-label-desc {
+        background-color: #121A30;
+        border: 1px solid #1E2B4A;
+        border-radius: 12px;
+        padding: 1.5rem;
+        height: 100%;
+    }
+    
+    .btn-outline-custom {
+        border: 1.5px solid #1E2B4A;
+        color: #94a3b8;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-outline-custom:hover {
+        border-color: #3A86FF;
+        color: #ffffff;
+        background-color: rgba(58, 134, 255, 0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-header">
+            <h1 class="page-title">Circulatory Simulation</h1>
+            <p class="page-subtitle">Visualize blood flow mechanics. Control systemic and pulmonary circuits dynamically.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 justify-content-center">
+    <!-- SVG Simulation Screen -->
+    <div class="col-lg-8">
+        <div class="sim-card">
+            <!-- Header Controls inside Card -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary border-opacity-10">
+                <div class="d-flex gap-2">
+                    <button id="start-btn" class="btn control-btn btn-start">Start</button>
+                    <button id="pause-btn" class="btn control-btn btn-pause">Pause</button>
+                    <button id="reset-btn" class="btn control-btn btn-reset">Reset</button>
+                </div>
+                <div>
+                    <span id="status-badge" class="status-badge badge-running">Running</span>
+                </div>
+            </div>
+
+            <!-- SVG Diagram -->
+            <div class="svg-wrapper">
+                <svg id="simulation-svg" viewBox="0 0 600 500" width="100%" height="450px" style="background-color: #070B16; border: 1px solid #1E2B4A; border-radius: 12px;">
+                    <!-- Grid background -->
+                    <defs>
+                        <pattern id="sim-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                            <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(30, 43, 74, 0.15)" stroke-width="1"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#sim-grid)" />
+
+                    <!-- Connection Paths (Faded backing lines) -->
+                    <!-- 1. Right Heart -> Lungs (Deoxygenated - Blue) -->
+                    <path id="path-to-lungs" d="M 270 250 C 200 210, 200 130, 280 100" stroke="#4FC3F7" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.15" />
+                    <!-- 2. Lungs -> Left Heart (Oxygenated - Red) -->
+                    <path id="path-to-heart-from-lungs" d="M 320 100 C 400 130, 400 210, 330 250" stroke="#E63946" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.15" />
+                    <!-- 3. Left Heart -> Body Organs (Oxygenated - Red) -->
+                    <path id="path-to-body" d="M 330 290 C 400 330, 400 410, 320 440" stroke="#E63946" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.15" />
+                    <!-- 4. Body Organs -> Right Heart (Deoxygenated - Blue) -->
+                    <path id="path-to-heart-from-body" d="M 280 440 C 200 410, 200 330, 270 290" stroke="#4FC3F7" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.15" />
+
+                    <!-- Active flowing paths (we use JS to animate dots along these) -->
+                    <!-- Labels and Boxes -->
+                    <!-- Central Heart Icon Background -->
+                    <image href="{% static 'images/simulation/heart_icon.png' %}" x="280" y="240" width="40" height="40" opacity="0.85" style="filter: drop-shadow(0 0 8px rgba(230, 57, 70, 0.6));" />
+
+                    <!-- Lungs (Top) -->
+                    <g transform="translate(250, 20)">
+                        <image href="{% static 'images/simulation/lungs_icon.png' %}" x="25" y="-10" width="50" height="50" style="filter: drop-shadow(0 0 8px rgba(230, 57, 70, 0.4));" />
+                        <rect x="0" y="45" width="100" height="35" rx="8" fill="#E63946" fill-opacity="0.1" stroke="#E63946" stroke-width="2" style="filter: drop-shadow(0 0 5px rgba(230,57,70,0.15));"/>
+                        <text x="50" y="67" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="Orbitron">LUNGS</text>
+                    </g>
+                    
+                    <!-- Right Heart (Middle Left) -->
+                    <g transform="translate(215, 230)">
+                        <rect x="0" y="0" width="60" height="80" rx="8" fill="#4FC3F7" fill-opacity="0.1" stroke="#4FC3F7" stroke-width="2" />
+                        <text x="30" y="45" fill="#ffffff" font-size="11" font-weight="700" text-anchor="middle" font-family="Orbitron">RIGHT</text>
+                        <text x="30" y="60" fill="#ffffff" font-size="11" font-weight="700" text-anchor="middle" font-family="Orbitron">HEART</text>
+                    </g>
+                    
+                    <!-- Left Heart (Middle Right) -->
+                    <g transform="translate(325, 230)">
+                        <rect x="0" y="0" width="60" height="80" rx="8" fill="#E63946" fill-opacity="0.1" stroke="#E63946" stroke-width="2" />
+                        <text x="30" y="45" fill="#ffffff" font-size="11" font-weight="700" text-anchor="middle" font-family="Orbitron">LEFT</text>
+                        <text x="30" y="60" fill="#ffffff" font-size="11" font-weight="700" text-anchor="middle" font-family="Orbitron">HEART</text>
+                    </g>
+                    
+                    <!-- Body Organs (Bottom) -->
+                    <g transform="translate(200, 360)">
+                        <image href="{% static 'images/simulation/body_organs.png' %}" x="75" y="-20" width="50" height="100" opacity="0.9" style="filter: drop-shadow(0 0 8px rgba(58,134,255,0.4));" />
+                        <rect x="30" y="85" width="140" height="35" rx="8" fill="#3A86FF" fill-opacity="0.1" stroke="#3A86FF" stroke-width="2" style="filter: drop-shadow(0 0 5px rgba(58,134,255,0.15));" />
+                        <text x="100" y="107" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle" font-family="Orbitron">BODY ORGANS</text>
+                    </g>
+
+                    <!-- Path Name Labels & Flow Arrows -->
+                    <!-- Pulmonary Arteries (Blue Arrow pointing up/left to Lungs) -->
+                    <image href="{% static 'images/simulation/vein_arrow.png' %}" x="125" y="175" width="30" height="30" style="filter: drop-shadow(0 0 4px #4FC3F7); transform: rotate(45deg); transform-origin: 140px 190px;" />
+                    <text x="140" y="160" fill="#4FC3F7" font-size="10" font-weight="700" text-anchor="middle" font-family="Orbitron">PULM. ARTERIES</text>
+                    
+                    <!-- Pulmonary Veins (Red Arrow pointing down/left to Left Heart) -->
+                    <image href="{% static 'images/simulation/artery_arrow.png' %}" x="445" y="175" width="30" height="30" style="filter: drop-shadow(0 0 4px #E63946); transform: rotate(135deg); transform-origin: 460px 190px;" />
+                    <text x="460" y="160" fill="#E63946" font-size="10" font-weight="700" text-anchor="middle" font-family="Orbitron">PULM. VEINS</text>
+                    
+                    <!-- Systemic Arteries (Red Arrow pointing down/right to Body) -->
+                    <image href="{% static 'images/simulation/artery_arrow.png' %}" x="445" y="325" width="30" height="30" style="filter: drop-shadow(0 0 4px #E63946); transform: rotate(45deg); transform-origin: 460px 340px;" />
+                    <text x="460" y="380" fill="#E63946" font-size="10" font-weight="700" text-anchor="middle" font-family="Orbitron">SYSTEMIC ARTERIES</text>
+                    
+                    <!-- Systemic Veins (Blue Arrow pointing up/right to Right Heart) -->
+                    <image href="{% static 'images/simulation/vein_arrow.png' %}" x="125" y="325" width="30" height="30" style="filter: drop-shadow(0 0 4px #4FC3F7); transform: rotate(-45deg); transform-origin: 140px 340px;" />
+                    <text x="140" y="380" fill="#4FC3F7" font-size="10" font-weight="700" text-anchor="middle" font-family="Orbitron">SYSTEMIC VEINS</text>
+
+                    <!-- Container for animated blood cells -->
+                    <g id="blood-cells"></g>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Explanatory Panel -->
+    <div class="col-lg-4">
+        <div class="svg-label-desc d-flex flex-column justify-content-between">
+            <div>
+                <h3 class="h4 text-white mb-3" style="font-family: 'Orbitron', sans-serif;">Physiological Keys</h3>
+                
+                <div class="mb-4">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span style="display:inline-block; width:15px; height:15px; border-radius:50%; background-color:#E63946; box-shadow:0 0 5px #E63946;"></span>
+                        <strong style="font-size:0.95rem; color:#ffffff;">Oxygenated Blood (#E63946)</strong>
+                    </div>
+                    <p class="text-muted small mb-0">High concentration of oxygen. Travels from Lungs to Left Heart, then pumped through Systemic Arteries to organs.</p>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span style="display:inline-block; width:15px; height:15px; border-radius:50%; background-color:#4FC3F7; box-shadow:0 0 5px #4FC3F7;"></span>
+                        <strong style="font-size:0.95rem; color:#ffffff;">Deoxygenated Blood (#4FC3F7)</strong>
+                    </div>
+                    <p class="text-muted small mb-0">Depleted oxygen, rich in carbon dioxide. Returns from organs via Systemic Veins to Right Heart, then pumped to Lungs.</p>
+                </div>
+                
+                <div class="border-top border-secondary border-opacity-10 pt-3 mt-3">
+                    <h4 class="h5 text-white mb-2" style="font-size:1.05rem;">Flow Circuits</h4>
+                    <p class="text-muted small mb-2"><strong>Pulmonary:</strong> Loop between Heart and Lungs. Recharges blood with oxygen.</p>
+                    <p class="text-muted small mb-0"><strong>Systemic:</strong> Loop between Heart and Body organs. Delivers oxygen and nutrients to tissues.</p>
+                </div>
+            </div>
+            
+            <div class="mt-4 pt-3 border-top border-secondary border-opacity-10 text-center">
+                <a href="{% url 'home' %}" class="btn btn-outline-custom w-100">&larr; Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Elements
+        const startBtn = document.getElementById("start-btn");
+        const pauseBtn = document.getElementById("pause-btn");
+        const resetBtn = document.getElementById("reset-btn");
+        const statusBadge = document.getElementById("status-badge");
+        const bloodCellsContainer = document.getElementById("blood-cells");
+
+        // Paths definitions
+        const paths = {
+            pulmonaryArtery: document.getElementById("path-to-lungs"),
+            pulmonaryVein: document.getElementById("path-to-heart-from-lungs"),
+            systemicArtery: document.getElementById("path-to-body"),
+            systemicVein: document.getElementById("path-to-heart-from-body")
+        };
+
+        // Colors
+        const RED = "#E63946";
+        const BLUE = "#4FC3F7";
+
+        // Setup cells array
+        let cells = [];
+        const cellsPerPath = 6;
+        let isRunning = true;
+        let animationId = null;
+
+        // Initialize cells
+        function initCells() {
+            // Clear existing
+            bloodCellsContainer.innerHTML = "";
+            cells = [];
+
+            // Helper to generate cells on a path
+            function createPathCells(pathElement, color) {
+                const length = pathElement.getTotalLength();
+                for (let i = 0; i < cellsPerPath; i++) {
+                    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    circle.setAttribute("r", "5.5");
+                    circle.setAttribute("fill", color);
+                    circle.setAttribute("style", `filter: drop-shadow(0 0 3px ${color});`);
+                    bloodCellsContainer.appendChild(circle);
+
+                    const initialOffset = (i / cellsPerPath);
+                    cells.push({
+                        element: circle,
+                        path: pathElement,
+                        length: length,
+                        offset: initialOffset
+                    });
+                }
+            }
+
+            createPathCells(paths.pulmonaryArtery, BLUE);
+            createPathCells(paths.pulmonaryVein, RED);
+            createPathCells(paths.systemicArtery, RED);
+            createPathCells(paths.systemicVein, BLUE);
+            
+            // Draw initial frames
+            draw();
+        }
+
+        // Draw cells based on current offset
+        function draw() {
+            cells.forEach(cell => {
+                const point = cell.path.getPointAtLength(cell.offset * cell.length);
+                cell.element.setAttribute("cx", point.x);
+                cell.element.setAttribute("cy", point.y);
+            });
+        }
+
+        // Update loop
+        function update() {
+            if (!isRunning) return;
+
+            cells.forEach(cell => {
+                cell.offset += 0.0035; // velocity constant
+                if (cell.offset >= 1) {
+                    cell.offset = 0;
+                }
+            });
+
+            draw();
+            animationId = requestAnimationFrame(update);
+        }
+
+        // Action controls
+        function startSimulation() {
+            if (!isRunning) {
+                isRunning = true;
+                statusBadge.textContent = "Running";
+                statusBadge.className = "status-badge badge-running";
+                update();
+            }
+        }
+
+        function pauseSimulation() {
+            isRunning = false;
+            statusBadge.textContent = "Paused";
+            statusBadge.className = "status-badge badge-paused";
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+        }
+
+        function resetSimulation() {
+            pauseSimulation();
+            initCells();
+            statusBadge.textContent = "Paused";
+            statusBadge.className = "status-badge badge-paused";
+        }
+
+        // Event listeners
+        startBtn.addEventListener("click", startSimulation);
+        pauseBtn.addEventListener("click", pauseSimulation);
+        resetBtn.addEventListener("click", resetSimulation);
+
+        // Initialize simulation
+        initCells();
+        update(); // Start running by default
+    });
+</script>
+{% endblock %}

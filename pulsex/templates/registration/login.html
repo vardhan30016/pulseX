@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login | PulseX{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Dark Navy Theme Overrides for Auth Page */
+    body {
+        background-color: #0A0F1E !important;
+        color: #f8fafc !important;
+        transition: background-color 0.5s ease;
+    }
+    
+    /* Navbar override on auth page */
+    .navbar {
+        background-color: #121A30 !important;
+        border-bottom: 1px solid #1E2B4A !important;
+    }
+    .navbar-brand {
+        background: linear-gradient(135deg, #FF6B6B 0%, #E63946 100%) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+    }
+    .nav-link {
+        color: #94a3b8 !important;
+    }
+    .nav-link:hover {
+        color: #E63946 !important;
+    }
+    .nav-link::after {
+        background: linear-gradient(135deg, #FF6B6B 0%, #E63946 100%) !important;
+    }
+
+    /* Card Styling */
+    .auth-card {
+        background-color: #121A30;
+        border: 1px solid #1E2B4A;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        padding: 2.5rem;
+    }
+
+    /* Red Accent buttons */
+    .btn-red-accent {
+        background: linear-gradient(135deg, #FF6B6B 0%, #E63946 100%);
+        color: #ffffff;
+        border: none;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+    }
+    .btn-red-accent:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(230, 57, 70, 0.6);
+        color: #ffffff;
+    }
+
+    /* Input overrides for dark mode forms */
+    .form-control {
+        background-color: #0A0F1E !important;
+        border: 1px solid #1E2B4A !important;
+        color: #f8fafc !important;
+        border-radius: 8px;
+        padding: 0.75rem;
+        transition: all 0.2s ease;
+    }
+    .form-control:focus {
+        border-color: #E63946 !important;
+        box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.25) !important;
+    }
+    .form-label, .form-check-label {
+        color: #94a3b8 !important;
+        font-weight: 500;
+    }
+    .invalid-feedback {
+        color: #FF6B6B !important;
+    }
+    .text-muted {
+        color: #94a3b8 !important;
+    }
+    .card-footer-link {
+        color: #E63946;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s ease;
+    }
+    .card-footer-link:hover {
+        color: #FF6B6B;
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center py-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="auth-card">
+            <div class="text-center mb-4">
+                <h2 class="h3 mb-2" style="font-family: 'Outfit', sans-serif; letter-spacing: -0.5px;">Welcome Back</h2>
+                <p class="text-muted">Sign in to access your PulseX dashboard</p>
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                {{ form|crispy }}
+                
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-red-accent rounded-pill">Sign In</button>
+                </div>
+            </form>
+            
+            <div class="text-center mt-4 pt-2 border-top border-secondary border-opacity-10">
+                <p class="mb-0 text-muted" style="font-size: 0.9rem;">
+                    Don't have an account? 
+                    <a href="{% url 'register' %}" class="card-footer-link">Register here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}PulseX | Connecting Knowledge with the Rhythm of Life{% endblock %}
+
+{% block extra_css %}
+<!-- Google Fonts: Orbitron for headings, Inter for body -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* Global Overrides for Dark Navy Theme */
+    body {
+        background-color: #0A0F1E !important;
+        color: #f8fafc !important;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 0.5px;
+    }
+
+    /* Navbar overrides */
+    .navbar {
+        background-color: #121A30 !important;
+        border-bottom: 1px solid #1E2B4A !important;
+    }
+    .navbar-brand {
+        background: linear-gradient(135deg, #FF6B6B 0%, #E63946 100%) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 900;
+        font-size: 1.65rem;
+    }
+    .nav-link {
+        color: #94a3b8 !important;
+    }
+    .nav-link:hover {
+        color: #FF6B6B !important;
+    }
+    .nav-link::after {
+        background: linear-gradient(135deg, #FF6B6B 0%, #E63946 100%) !important;
+    }
+
+    /* Hero Section */
+    .hero-container {
+        padding: 4rem 0 2rem 0;
+        text-align: center;
+        position: relative;
+    }
+    
+    .hero-title {
+        font-weight: 900;
+        font-size: 4.5rem;
+        background: linear-gradient(135deg, #E63946 0%, #3A86FF 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 30px rgba(230, 57, 70, 0.15);
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+    
+    .hero-tagline {
+        font-size: 1.35rem;
+        color: #94a3b8;
+        font-weight: 400;
+        max-width: 600px;
+        margin: 0 auto;
+        letter-spacing: 0.5px;
+    }
+
+    /* Animated ECG Line */
+    .ecg-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 2.5rem auto;
+        position: relative;
+        background: rgba(18, 26, 48, 0.3);
+        border: 1px solid rgba(30, 43, 74, 0.3);
+        border-radius: 12px;
+        padding: 1rem;
+        overflow: hidden;
+    }
+    
+    .ecg-svg {
+        width: 100%;
+        height: 100px;
+    }
+    
+    .ecg-grid {
+        stroke: rgba(30, 43, 74, 0.2);
+        stroke-width: 1;
+    }
+    
+    .ecg-line {
+        stroke: #E63946;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+        filter: drop-shadow(0 0 6px rgba(230, 57, 70, 0.8));
+        stroke-dasharray: 1200;
+        stroke-dashoffset: 1200;
+        animation: heartPulse 3.5s linear infinite;
+    }
+    
+    @keyframes heartPulse {
+        0% {
+            stroke-dashoffset: 1200;
+        }
+        50% {
+            stroke-dashoffset: 0;
+        }
+        100% {
+            stroke-dashoffset: -1200;
+        }
+    }
+
+    /* Navigation Grid Cards */
+    .nav-card {
+        background-color: #121A30;
+        border-radius: 16px;
+        padding: 2rem;
+        height: 100%;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Alternating Red and Blue Card Styling */
+    .card-red {
+        border: 1px solid #1E2B4A;
+        box-shadow: 0 4px 15px rgba(230, 57, 70, 0.03);
+    }
+    .card-red:hover {
+        transform: translateY(-8px);
+        border-color: #E63946;
+        box-shadow: 0 10px 25px rgba(230, 57, 70, 0.25);
+    }
+    
+    .card-blue {
+        border: 1px solid #1E2B4A;
+        box-shadow: 0 4px 15px rgba(58, 134, 255, 0.03);
+    }
+    .card-blue:hover {
+        transform: translateY(-8px);
+        border-color: #3A86FF;
+        box-shadow: 0 10px 25px rgba(58, 134, 255, 0.25);
+    }
+
+    .card-icon {
+        font-size: 2.25rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .card-title {
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+        color: #ffffff;
+        transition: color 0.2s ease;
+    }
+    
+    .card-red:hover .card-title {
+        color: #E63946;
+    }
+    
+    .card-blue:hover .card-title {
+        color: #3A86FF;
+    }
+    
+    .card-description {
+        font-size: 0.9rem;
+        color: #94a3b8;
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
+    }
+    
+    .card-action {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .card-red .card-action {
+        color: #E63946;
+    }
+    
+    .card-blue .card-action {
+        color: #3A86FF;
+    }
+    
+    /* Footer Overrides */
+    .footer {
+        background-color: #050A14 !important;
+        border-top: 1px solid #1E2B4A !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="row align-items-center py-5">
+    <div class="col-lg-6 text-center text-lg-start">
+        <div class="hero-container py-0 text-center text-lg-start">
+            <h1 class="hero-title">PulseX</h1>
+            <p class="hero-tagline ms-lg-0">Connecting Knowledge with the Rhythm of Life</p>
+        </div>
+    </div>
+    <div class="col-lg-6 text-center mt-4 mt-lg-0">
+        <img src="{% static 'images/hero_heart.png' %}" alt="Human Heart" class="hero-img">
+    </div>
+</div>
+
+<!-- ECG Heartbeat Animation -->
+<div class="row">
+    <div class="col-12">
+        <div class="ecg-container text-center py-2">
+            <svg class="ecg-svg" viewBox="0 0 1200 100">
+                <defs>
+                    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <rect width="20" height="20" fill="none"/>
+                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(230, 57, 70, 0.08)" stroke-width="1"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+                <path class="ecg-line" d="M 0 50 L 120 50 C 130 50, 140 40, 150 50 L 170 50 L 180 58 L 195 10 L 210 85 L 225 50 C 245 50, 255 30, 265 50 L 520 50 C 530 50, 540 40, 550 50 L 570 50 L 580 58 L 595 10 L 610 85 L 625 50 C 645 50, 655 30, 665 50 L 920 50 C 930 50, 940 40, 950 50 L 970 50 L 980 58 L 995 10 L 1010 85 L 1025 50 C 1045 50, 1055 30, 1065 50 L 1200 50" />
+            </svg>
+        </div>
+    </div>
+</div>
+
+<!-- 6 Navigation Cards Grid -->
+<div class="row g-4 mt-2">
+    <!-- 1. Learn Card (Red Accent) -->
+    <div class="col-md-6 col-lg-4">
+        <a href="{% url 'learn' %}" class="nav-card card-red">
+            <div>
+                <div class="card-icon">📚</div>
+                <h3 class="card-title">Learn</h3>
+                <p class="card-description">Delve into the anatomy of the heart and the blood circulation pathways with high-quality educational material.</p>
+            </div>
+            <div class="card-action">
+                Explore Lessons &rarr;
+            </div>
+        </a>
+    </div>
+
+    <!-- 2. Simulation Card (Blue Accent) -->
+    <div class="col-md-6 col-lg-4">
+        <a href="{% url 'simulation' %}" class="nav-card card-blue">
+            <div>
+                <div class="card-icon">🧪</div>
+                <h3 class="card-title">Simulation</h3>
+                <p class="card-description">Interact with high-fidelity, real-time physiological models to visualize blood pressures and cardiac workcycles.</p>
+            </div>
+            <div class="card-action">
+                Launch Lab &rarr;
+            </div>
+        </a>
+    </div>
+
+    <!-- 3. Blood Card (Red Accent) -->
+    <div class="col-md-6 col-lg-4">
+        <a href="{% url 'blood' %}" class="nav-card card-red">
+            <div>
+                <div class="card-icon">🩸</div>
+                <h3 class="card-title">Blood</h3>
+                <p class="card-description">Examine the cellular components of human blood, blood typing, oxygen transportation, and homeostasis mechanisms.</p>
+            </div>
+            <div class="card-action">
+                Study Hematology &rarr;
+            </div>
+        </a>
+    </div>
+
+    <!-- 4. Diseases Card (Blue Accent) -->
+    <div class="col-md-6 col-lg-4">
+        <a href="{% url 'diseases' %}" class="nav-card card-blue">
+            <div>
+                <div class="card-icon">💔</div>
+                <h3 class="card-title">Diseases</h3>
+                <p class="card-description">Learn about common circulatory conditions, risk factors, causes, identifying symptoms, and preventative medicine.</p>
+            </div>
+            <div class="card-action">
+                Browse Library &rarr;
+            </div>
+        </a>
+    </div>
+
+    <!-- 5. Quiz Card (Red Accent) -->
+    <div class="col-md-6 col-lg-4">
+        <a href="{% url 'quiz' %}" class="nav-card card-red">
+            <div>
+                <div class="card-icon">📝</div>
+                <h3 class="card-title">Quiz</h3>
+                <p class="card-description">Challenge yourself on cardiovascular topics. Review correct responses in real-time and register high scores.</p>
+            </div>
+            <div class="card-action">
+                Test Knowledge &rarr;
+            </div>
+        </a>
+    </div>
+
+    <!-- 6. Certificate Card (Blue Accent) -->
+    <div class="col-md-6 col-lg-4">
+        <a href="{% url 'certificate' %}" class="nav-card card-blue">
+            <div>
+                <div class="card-icon">🎓</div>
+                <h3 class="card-title">Certificate</h3>
+                <p class="card-description">Achieve complete mastery. Pass the comprehensive final assessment to qualify for your digital credentials.</p>
+            </div>
+            <div class="card-action">
+                Claim Badge &rarr;
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock %}

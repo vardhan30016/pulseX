@@ -1,0 +1,286 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}User Dashboard | PulseX{% endblock %}
+
+{% block extra_css %}
+<!-- Google Fonts: Orbitron for headings, Inter for body -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* Dark Navy Theme Overrides */
+    body {
+        background-color: #0A0F1E !important;
+        color: #f8fafc !important;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .text-muted {
+        color: #94a3b8 !important;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 0.5px;
+    }
+
+    /* Navbar overrides */
+    .navbar {
+        background-color: #121A30 !important;
+        border-bottom: 1px solid #1E2B4A !important;
+    }
+    .navbar-brand {
+        background: linear-gradient(135deg, #FF6B6B 0%, #E63946 100%) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+    }
+    .nav-link {
+        color: #94a3b8 !important;
+    }
+    .nav-link:hover {
+        color: #FF6B6B !important;
+    }
+
+    /* Profile Card */
+    .profile-card {
+        background-color: #121A30;
+        border: 1px solid #1E2B4A;
+        border-radius: 16px;
+        padding: 2rem;
+        height: 100%;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+    
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        background-color: rgba(58, 134, 255, 0.1);
+        border: 2.5px solid #3A86FF;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        margin: 0 auto 1.25rem auto;
+    }
+
+    /* Navigation list inside Dashboard */
+    .dashboard-nav-item {
+        background-color: #0A0F1E;
+        border: 1px solid #1E2B4A;
+        border-radius: 10px;
+        padding: 0.85rem 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+        text-decoration: none;
+        color: #cbd5e1;
+        transition: all 0.2s ease;
+    }
+    
+    .dashboard-nav-item:hover {
+        background-color: #1e2b4d;
+        border-color: #3A86FF;
+        color: #ffffff;
+        transform: translateX(4px);
+    }
+
+    /* Table styling for dark mode */
+    .table-dark-custom {
+        background-color: #121A30;
+        border: 1px solid #1E2B4A;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+    
+    .table-dark-custom table {
+        margin-bottom: 0;
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .table-dark-custom th {
+        background-color: #1c2742;
+        border-bottom: 2px solid #2d3b60;
+        color: #94a3b8;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 1rem;
+        text-align: left;
+    }
+    
+    .table-dark-custom td {
+        border-bottom: 1px solid #1e2b4a;
+        color: #cbd5e1;
+        padding: 1rem;
+        font-size: 0.95rem;
+    }
+    
+    .table-dark-custom tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .table-dark-custom tr:hover td {
+        background-color: #1a243e;
+        color: #ffffff;
+    }
+    
+    /* Dynamic Badge Styles */
+    .badge-excellent {
+        background-color: rgba(25, 135, 84, 0.1);
+        color: #198754;
+        border: 1px solid #198754;
+        font-weight: 600;
+    }
+    
+    .badge-good {
+        background-color: rgba(255, 179, 0, 0.1);
+        color: #ffb300;
+        border: 1px solid #ffb300;
+        font-weight: 600;
+    }
+    
+    .badge-tryagain {
+        background-color: rgba(230, 57, 70, 0.1);
+        color: #E63946;
+        border: 1px solid #E63946;
+        font-weight: 600;
+    }
+    
+    .btn-logout {
+        background-color: rgba(230, 57, 70, 0.1);
+        color: #E63946;
+        border: 1px solid #E63946;
+        font-weight: 600;
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-logout:hover {
+        background-color: #E63946;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Left Column: Profile Card & Modules Navigation -->
+    <div class="col-lg-4">
+        <!-- Profile Details Card -->
+        <div class="profile-card text-center mb-4">
+            <div class="mb-3">
+                {% if profile.profile_picture %}
+                    <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
+                {% else %}
+                    <img src="{% static 'images/icons/default_avatar.png' %}" alt="Default Avatar" class="profile-pic">
+                {% endif %}
+            </div>
+            <h2 class="h4 text-white mb-1" style="font-family: 'Outfit', sans-serif;">{{ user.username }}</h2>
+            <p class="text-muted small mb-3">{{ user.email }}</p>
+            
+            {% if profile.bio %}
+                <p class="text-muted small mb-3" style="font-style: italic; font-size: 0.9rem;">"{{ profile.bio }}"</p>
+            {% endif %}
+            
+            <div class="border-top border-secondary border-opacity-10 pt-3 mt-3">
+                <button class="btn btn-outline-custom btn-sm w-100 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#editProfileForm" aria-expanded="false" aria-controls="editProfileForm">
+                    ✏️ Edit Profile
+                </button>
+                <div class="collapse" id="editProfileForm">
+                    <form method="POST" enctype="multipart/form-data" class="mt-3 text-start p-3 rounded" style="background-color: #0A0F1E; border: 1px solid #1E2B4A;">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label text-muted small">Bio</label>
+                            {{ profile_form.bio }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted small">Profile Picture</label>
+                            {{ profile_form.profile_picture }}
+                        </div>
+                        <button type="submit" class="btn btn-sm w-100 py-2" style="background: linear-gradient(135deg, #3A86FF 0%, #0056b3 100%); color: white; border: none; font-weight: 600; border-radius: 50px;">Save Changes</button>
+                    </form>
+                </div>
+                <a href="{% url 'logout' %}" class="btn btn-logout w-100 shadow-sm mt-2">Logout</a>
+            </div>
+        </div>
+
+        <!-- Modules Links Card -->
+        <div class="profile-card">
+            <h3 class="h5 text-white mb-3" style="font-family: 'Orbitron', sans-serif;">Platform Navigation</h3>
+            <div class="d-flex flex-column">
+                <a href="{% url 'home' %}" class="dashboard-nav-item"><span>🏠 Home Dashboard</span> <span>&rarr;</span></a>
+                <a href="{% url 'learn' %}" class="dashboard-nav-item"><span>📚 Learn Lessons</span> <span>&rarr;</span></a>
+                <a href="{% url 'simulation' %}" class="dashboard-nav-item"><span>🧪 Blood Flow Simulator</span> <span>&rarr;</span></a>
+                <a href="{% url 'blood' %}" class="dashboard-nav-item"><span>🩸 Blood Components</span> <span>&rarr;</span></a>
+                <a href="{% url 'diseases' %}" class="dashboard-nav-item"><span>💔 Disease Explorer</span> <span>&rarr;</span></a>
+                <a href="{% url 'quiz' %}" class="dashboard-nav-item"><span>📝 Interactive Quiz</span> <span>&rarr;</span></a>
+                <a href="{% url 'certificate' %}" class="dashboard-nav-item"><span>🎓 Generate Certificate</span> <span>&rarr;</span></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Welcome Message & Quiz History -->
+    <div class="col-lg-8">
+        <!-- Welcome Message -->
+        <div class="profile-card mb-4" style="background: linear-gradient(135deg, #121A30 0%, #17223e 100%);">
+            <h1 class="h2 text-white mb-2" style="letter-spacing:-0.5px;">Welcome Back, {{ user.username }}!</h1>
+            <p class="text-muted mb-0">Here is a report of your learning progress and recent exam history. Keep testing your knowledge to unlock the graduation certificate.</p>
+        </div>
+
+        <!-- Quiz History Card -->
+        <div class="profile-card">
+            <h3 class="h5 text-white mb-3" style="font-family: 'Orbitron', sans-serif;">Exam History</h3>
+            
+            {% if scores %}
+                <div class="table-dark-custom">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date Attempted</th>
+                                <th>Score</th>
+                                <th>Total</th>
+                                <th>Badge Earned</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in scores %}
+                                <tr>
+                                    <td>{{ record.date_attempted|date:"Y-m-d H:i" }}</td>
+                                    <td>{{ record.score }}</td>
+                                    <td>{{ record.total_questions }}</td>
+                                    <td>
+                                        {% if record.score >= 8 %}
+                                            <span class="badge badge-excellent px-3 py-1 rounded-pill">Excellent</span>
+                                        {% elif record.score >= 5 %}
+                                            <span class="badge badge-good px-3 py-1 rounded-pill">Good</span>
+                                        {% else %}
+                                            <span class="badge badge-tryagain px-3 py-1 rounded-pill">Try Again</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5 border border-secondary border-opacity-10 rounded-3" style="background-color: #0A0F1E;">
+                    <div class="fs-1 mb-3">📝</div>
+                    <h4 class="h5 text-white">No attempts yet</h4>
+                    <p class="text-muted small mb-4">You have not completed any quizzes yet. Challenge yourself now!</p>
+                    <a href="{% url 'quiz' %}" class="btn btn-outline-custom">Start First Quiz &rarr;</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

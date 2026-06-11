@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | PulseX{% endblock %}
+
+{% block extra_css %}
+<style>
+    .welcome-card {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        border-radius: 20px;
+        color: white;
+        padding: 3rem;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .welcome-card h1 {
+        font-size: 2.75rem;
+        letter-spacing: -1px;
+    }
+    
+    .feature-card {
+        background-color: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 2rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border-color: #cbd5e1;
+    }
+    
+    .icon-container {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    
+    .icon-red {
+        background-color: rgba(230, 57, 70, 0.1);
+        color: #E63946;
+    }
+    
+    .icon-blue {
+        background-color: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+    }
+    
+    .icon-purple {
+        background-color: rgba(139, 92, 246, 0.1);
+        color: #8b5cf6;
+    }
+    
+    .feature-link {
+        color: #0f172a;
+        text-decoration: none;
+    }
+    .feature-link:hover {
+        color: #0f172a;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="welcome-card text-center text-md-start">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    {% if user.is_authenticated %}
+                        <span class="badge bg-danger mb-3 px-3 py-2 rounded-pill" style="font-size: 0.85rem; font-weight: 600;">Authenticated</span>
+                        <h1 class="mb-3">Hello, {{ user.username }}!</h1>
+                        <p class="lead text-white-50 mb-0">Welcome back to your dashboard. Explore circulatory conditions, track your learning progress, and manage your profile metrics.</p>
+                    {% else %}
+                        <span class="badge bg-secondary mb-3 px-3 py-2 rounded-pill" style="font-size: 0.85rem; font-weight: 600;">Guest Mode</span>
+                        <h1 class="mb-3">Welcome to PulseX</h1>
+                        <p class="lead text-white-50 mb-4">Empowering heart health education and circulatory system awareness. Log in or create an account to start taking quizzes and saving scores.</p>
+                        <div>
+                            <a href="{% url 'login' %}" class="btn btn-danger btn-lg px-4 py-2 me-2 rounded-pill shadow-sm">Sign In</a>
+                            <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg px-4 py-2 rounded-pill">Create Account</a>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-4 text-center d-none d-md-block">
+                    <!-- Premium visual representation of pulse/heartbeat -->
+                    <div class="pulse-visual py-4">
+                        <svg width="120" height="120" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 50H30L40 20L55 80L65 40L75 50H90" stroke="#FF416C" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Disease Database Card -->
+    <div class="col-md-4">
+        <a href="#" class="feature-link">
+            <div class="feature-card h-100">
+                <div class="icon-container icon-red">
+                    🩺
+                </div>
+                <h3 class="h4 mb-3">Disease Library</h3>
+                <p class="text-muted mb-0">Browse through our curated medical encyclopedia of circulatory disorders, causes, key symptoms, and prevention strategies.</p>
+            </div>
+        </a>
+    </div>
+    
+    <!-- Quizzes Card -->
+    <div class="col-md-4">
+        <a href="#" class="feature-link">
+            <div class="feature-card h-100">
+                <div class="icon-container icon-blue">
+                    ⚡
+                </div>
+                <h3 class="h4 mb-3">Interactive Quizzes</h3>
+                <p class="text-muted mb-0">Test your knowledge on core circulatory anatomy and cardiovascular health. Attempt real-time questions and verify answers instantly.</p>
+            </div>
+        </a>
+    </div>
+    
+    <!-- Profile Sync Card -->
+    <div class="col-md-4">
+        <a href="#" class="feature-link">
+            <div class="feature-card h-100">
+                <div class="icon-container icon-purple">
+                    👤
+                </div>
+                <h3 class="h4 mb-3">Profile Metrics</h3>
+                <p class="text-muted mb-0">Update your profile bio, upload dynamic profile pictures, and view a chronological history of your recent quiz scores.</p>
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock %}

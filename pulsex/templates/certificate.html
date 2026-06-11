@@ -1,0 +1,417 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Graduate Certificate | PulseX{% endblock %}
+
+{% block extra_css %}
+<!-- Google Fonts: Cinzel for formal Roman headings, Great Vibes for cursive script, Inter for body -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800;900&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* Dark Navy Theme Overrides for Platform Page */
+    body {
+        background-color: #0A0F1E !important;
+        color: #f8fafc !important;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 0.5px;
+    }
+    
+    @keyframes rotateShield {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    @keyframes floatBadge {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-4px);
+        }
+    }
+
+    /* Navbar overrides */
+    .navbar {
+        background-color: #121A30 !important;
+        border-bottom: 1px solid #1E2B4A !important;
+    }
+    .navbar-brand {
+        background: linear-gradient(135deg, #FF6B6B 0%, #E63946 100%) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+    }
+    .nav-link {
+        color: #94a3b8 !important;
+    }
+    .nav-link:hover {
+        color: #FF6B6B !important;
+    }
+
+    /* Generator Panel */
+    .gen-card {
+        background-color: #121A30;
+        border: 1px solid #1E2B4A;
+        border-radius: 16px;
+        padding: 2.25rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+    
+    .form-control {
+        background-color: #0A0F1E !important;
+        border: 1px solid #1E2B4A !important;
+        color: #f8fafc !important;
+        border-radius: 8px;
+        padding: 0.75rem 1.25rem;
+    }
+    .form-control:focus {
+        border-color: #3A86FF !important;
+        box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.25) !important;
+    }
+    
+    .btn-gradient-blue {
+        background: linear-gradient(135deg, #3A86FF 0%, #0056b3 100%);
+        color: white;
+        border: none;
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(58, 134, 255, 0.3);
+        transition: all 0.2s ease;
+    }
+    
+    .btn-gradient-blue:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(58, 134, 255, 0.5);
+        color: white;
+    }
+    
+    /* Certificate Design (Cream paper layout with gold border) */
+    .certificate-container {
+        display: none;
+        margin-top: 3rem;
+        animation: fadeIn 0.5s ease-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    
+    .certificate-frame {
+        background-color: #fdfbf7;
+        background-image: radial-gradient(circle, #ffffff 60%, #faf6ee 100%);
+        color: #1e293b;
+        border: 12px double #D4AF37;
+        padding: 4rem;
+        position: relative;
+        text-align: center;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        max-width: 850px;
+        margin: 0 auto;
+        border-radius: 4px;
+    }
+    
+    /* Gold corner flourishes */
+    .cert-corner {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        border: 2px solid #D4AF37;
+    }
+    .corner-tl { top: 15px; left: 15px; border-right: none; border-bottom: none; }
+    .corner-tr { top: 15px; right: 15px; border-left: none; border-bottom: none; }
+    .corner-bl { bottom: 15px; left: 15px; border-right: none; border-top: none; }
+    .corner-br { bottom: 15px; right: 15px; border-left: none; border-top: none; }
+    
+    .cert-badge {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem auto;
+    }
+    
+    .cert-title {
+        font-family: 'Cinzel', serif;
+        font-weight: 800;
+        font-size: 2.25rem;
+        color: #b2902b;
+        letter-spacing: 2px;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.05);
+        margin-bottom: 0.5rem;
+    }
+    
+    .cert-subtitle {
+        font-family: 'Cinzel', serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 3px;
+        color: #475569;
+        text-transform: uppercase;
+        margin-bottom: 2rem;
+    }
+    
+    .cert-p {
+        font-size: 1.1rem;
+        color: #475569;
+        margin-bottom: 1.5rem;
+        font-style: italic;
+    }
+    
+    .cert-name {
+        font-family: 'Great Vibes', cursive;
+        font-size: 4rem;
+        color: #1e293b;
+        margin: 1rem 0;
+        line-height: 1;
+    }
+    
+    .cert-course {
+        font-family: 'Cinzel', serif;
+        font-size: 1.65rem;
+        font-weight: 700;
+        color: #1e293b;
+        text-decoration: underline;
+        text-underline-offset: 8px;
+        text-decoration-color: #D4AF37;
+        margin: 0.5rem 0 2rem 0;
+    }
+    
+    .cert-meta-row {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-end;
+        margin-top: 3.5rem;
+        border-top: 1px dashed rgba(212, 175, 55, 0.3);
+        padding-top: 1.5rem;
+    }
+    
+    .cert-meta-item {
+        flex: 1;
+    }
+    
+    .cert-sign-label {
+        font-size: 0.8rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 0.5rem;
+        display: block;
+    }
+    
+    .cert-sign-val {
+        font-family: 'Playfair Display', serif;
+        font-weight: 600;
+        font-size: 1.05rem;
+        color: #1e293b;
+        border-bottom: 1px solid #94a3b8;
+        display: inline-block;
+        padding-bottom: 0.25rem;
+        min-width: 150px;
+    }
+
+    .btn-print {
+        background-color: #121A30;
+        color: #D4AF37;
+        border: 2px solid #D4AF37;
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 0.75rem 2.5rem;
+        border-radius: 50px;
+        transition: all 0.2s ease;
+    }
+    .btn-print:hover {
+        background-color: #D4AF37;
+        color: #121A30;
+        transform: translateY(-2px);
+    }
+    
+    /* PRINT MEDIA QUERY - Hides everything but the certificate card */
+    @media print {
+        body, html {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        .navbar, footer, .gen-card, .btn-print, .back-btn-container, .page-header {
+            display: none !important;
+        }
+        
+        .container {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        
+        .certificate-container {
+            display: block !important;
+            margin-top: 0 !important;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.15) !important;
+        }
+        
+        .certificate-frame {
+            box-shadow: none !important;
+            border: 12px double #D4AF37 !important;
+            background-color: #ffffff !important;
+            background-image: none !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-header">
+            <div class="text-center mb-3">
+                <svg width="100" height="100" viewBox="0 0 100 100" style="filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.4)); display: inline-block;">
+                    <defs>
+                        <linearGradient id="gold-shine" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ffe69c" />
+                            <stop offset="50%" stop-color="#D4AF37" />
+                            <stop offset="100%" stop-color="#b2902b" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Glowing background ray circle -->
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="url(#gold-shine)" stroke-width="1.5" stroke-dasharray="8 4" style="animation: rotateShield 20s linear infinite; transform-origin: 50% 50%;" />
+                    
+                    <!-- Badge ribbon behind -->
+                    <path d="M38 65 L32 90 L50 82 L68 90 L62 65 Z" fill="#b2902b" opacity="0.9" />
+                    <path d="M42 65 L38 85 L50 78 L62 85 L58 65 Z" fill="#D4AF37" />
+                    
+                    <!-- Core Golden Medal -->
+                    <circle cx="50" cy="48" r="28" fill="url(#gold-shine)" stroke="#ffe69c" stroke-width="2" style="animation: floatBadge 3.5s ease-in-out infinite;" />
+                    <!-- Inner ring -->
+                    <circle cx="50" cy="48" r="23" fill="none" stroke="#ffe69c" stroke-width="1" stroke-dasharray="2 2" style="animation: floatBadge 3.5s ease-in-out infinite;" />
+                    
+                    <!-- Graduation Cap (Mortarboard) -->
+                    <g style="animation: floatBadge 3.5s ease-in-out infinite; transform-origin: 50px 48px;">
+                        <polygon points="50,34 68,40 50,46 32,40" fill="#1e293b" stroke="#ffffff" stroke-width="1" />
+                        <polygon points="40,43 40,51 50,55 60,51 60,43" fill="#1e293b" stroke="#ffffff" stroke-width="1" />
+                        <!-- Tassel -->
+                        <path d="M50 40 L60 44 L60 48" stroke="#ffffff" stroke-width="1" fill="none" />
+                        <circle cx="60" cy="49" r="1.5" fill="#D4AF37" />
+                    </g>
+                </svg>
+            </div>
+            <h1 class="page-title">Digital Credentials</h1>
+            <p class="page-subtitle">Pass assessments to generate your customized course completion credentials.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        
+        <!-- Generator Form Panel -->
+        <div class="gen-card mb-4">
+            <h3 class="h5 text-white mb-3" style="font-family: 'Orbitron', sans-serif;">Generate Graduation Certificate</h3>
+            <div class="row g-3 align-items-center">
+                <div class="col-md-8">
+                    <input type="text" id="student-name-input" class="form-control" placeholder="Enter your full name for credentials..." required>
+                </div>
+                <div class="col-md-4">
+                    <button onclick="generateCertificate();" class="btn btn-gradient-blue w-100">Generate</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Certificate Container (Hidden initially) -->
+        <div id="certificate" class="certificate-container mb-5">
+            <div class="certificate-frame">
+                <!-- Background Border Frame Image -->
+                <img src="{% static 'images/certificates/certificate_border.png' %}" alt="Certificate Border" class="cert-border">
+                
+                <!-- Absolute Positioned Seal Image -->
+                <img src="{% static 'images/certificates/certificate_seal.png' %}" alt="Certificate Seal" class="cert-seal">
+                
+                <!-- Content container to keep text above the absolute background -->
+                <div style="position: relative; z-index: 2;">
+                    <!-- Certificate Logo Header -->
+                    <div class="text-center mb-3">
+                        <img src="{% static 'images/certificates/certificate_logo.png' %}" alt="PulseX Logo" style="height: 48px; width: auto;">
+                    </div>
+                    
+                    <h2 class="cert-title">Certificate of Completion</h2>
+                    <div class="cert-subtitle">This credential is proudly awarded to</div>
+                    
+                    <div class="cert-name" id="cert-student-name">Jane Doe</div>
+                    
+                    <p class="cert-p">for successfully completing all academic requirements for</p>
+                    
+                    <div class="cert-course" style="color: #1e293b;">Human Circulatory System</div>
+                    
+                    <!-- Meta Signature & Dates -->
+                    <div class="cert-meta-row">
+                        <div class="cert-meta-item">
+                            <span id="cert-date" class="cert-sign-val">2026-06-10</span>
+                            <span class="cert-sign-label">Date of Issue</span>
+                        </div>
+                        <div class="cert-meta-item">
+                            <div class="signature-container" style="position: relative; display: inline-block; margin-bottom: -15px;">
+                                <img src="{% static 'images/certificates/signature_line.png' %}" alt="Signature" style="width: 160px; height: auto;">
+                            </div>
+                            <span class="cert-sign-label">Authorized Signature</span>
+                        </div>
+                        <div class="cert-meta-item">
+                            <span class="cert-sign-val">Heart Sync Connectors</span>
+                            <span class="cert-sign-label">Awarding Body</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Printing Actions -->
+            <div class="text-center mt-4 back-btn-container">
+                <button onclick="window.print();" class="btn btn-print shadow-sm me-2">Print / Download PDF</button>
+                <a href="{% url 'home' %}" class="btn btn-outline-custom">Return to Dashboard</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function generateCertificate() {
+        const nameInput = document.getElementById('student-name-input');
+        const name = nameInput.value.trim();
+        
+        if (!name) {
+            alert("Please enter your name to generate the certificate.");
+            return;
+        }
+
+        // Populate fields
+        document.getElementById('cert-student-name').textContent = name;
+        
+        // Populate today's date
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        document.getElementById('cert-date').textContent = `${yyyy}-${mm}-${dd}`;
+
+        // Reveal Certificate
+        document.getElementById('certificate').style.display = 'block';
+
+        // Scroll to certificate
+        document.getElementById('certificate').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+{% endblock %}
