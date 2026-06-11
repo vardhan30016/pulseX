@@ -11,7 +11,7 @@ venv/
 ENV/
 
 # Databases
-db.sqlite3
+
 
 # User uploaded media
 pulsex/media/
